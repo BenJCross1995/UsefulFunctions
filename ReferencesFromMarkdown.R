@@ -4,11 +4,9 @@ references.from.markdown <- function(file.location, include.sections = FALSE){
   #' used to compare against references in a raference manager such as Zotero. The
   #' user can also specify to include the main and subsection in the report where
   #' the reference was found.
-  #' 
   #' @param file.location - The location string of the file to scan.
   #' @param include.sections - A logical value TRUE or FALSE indicating whether
   #' to include the sections in the report where the reference occurs.
-  #' 
   #' @return
   
   if(include.sections == FALSE){
