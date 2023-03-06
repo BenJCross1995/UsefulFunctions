@@ -9,6 +9,8 @@ references.from.markdown <- function(file.location, include.sections = FALSE){
   #' to include the sections in the report where the reference occurs.
   #' @return
   
+  require(stringr)
+  require(dplyr)
   if(include.sections == FALSE){
     
     # This code returns a one-column dataframe containing the unique reference BibTex values in alphabetical order.
