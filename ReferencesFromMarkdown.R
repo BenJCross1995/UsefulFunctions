@@ -1,3 +1,9 @@
+#----------------------------------------------------------------------------------------#
+#--------------------------------PULL MARKDOWN REFERENCES--------------------------------#
+#----------------------------------------BEN CROSS---------------------------------------#
+#----------------------------------------------------------------------------------------#
+
+
 references.from.markdown <- function(file.location, include.sections = FALSE){
   #' This function takes a filepath as a parameter, scans the file and returns
   #' the references in the form of their BibTex label as a dataframe. This can be
@@ -8,20 +14,29 @@ references.from.markdown <- function(file.location, include.sections = FALSE){
   #' @param include.sections - A logical value TRUE or FALSE indicating whether
   #' to include the sections in the report where the reference occurs.
   #' @return
-  
+
+  require(tidyr)
   require(stringr)
   require(dplyr)
+  
+  
   if(include.sections == FALSE){
     
     # This code returns a one-column dataframe containing the unique reference BibTex values in alphabetical order.
     
     data.frame(reference  = readLines(file.location)) %>%            # Scan the document from location
-      mutate(reference = str_extract(reference,
-                                     "(?<=\\[@)(.*?)(?=\\])")) %>%   # From each row extract anything in between '[@ ]'
-      filter(!is.na(reference)) %>%                                  # Remove any empty rows
+      mutate(reference = str_extract_all(reference,
+                                     "(?<=\\[)(.*?)(?=\\])")) %>%   # From each row extract anything in between '[@ ]'
+      filter(!is.na(reference)) %>%                                 # Remove any empty rows
+      unnest(everything()) %>%                                      # Removes items in a list column
+      separate_rows(reference, sep = "; ", convert = TRUE) %>%      # Seperate any references by ;
+      as.data.frame() %>%
+      filter(str_detect(reference, "^@") == TRUE) %>%               # Filter out anything without leading @
+      mutate(reference = gsub("@", "", reference)) %>%              # Remove the @
       unique() %>%
-      arrange(reference) %>%
+      arrange(reference) %>%                                      
       return()
+    
   } else {
     
     # This code returns a dataframe containing the references used and the sections the references are used in. This means
@@ -29,8 +44,8 @@ references.from.markdown <- function(file.location, include.sections = FALSE){
     
     data.frame(references.data  = readLines(file.location)) %>%             # Scan the document from location
       filter(!references.data == "") %>%                                    # Remove blank rows (line breaks)                    
-      mutate(reference = str_extract(references.data,
-                                     "(?<=\\[@)(.*?)(?=\\])"),
+      mutate(reference = str_extract_all(references.data,
+                                     "(?<=\\[)(.*?)(?=\\])"),
              code = str_detect(references.data, "```"),
              codeviewed = cumsum(str_detect(references.data,
                                             "```"))) %>%                    # Extract references and detect start and end of code chunks
@@ -48,7 +63,12 @@ references.from.markdown <- function(file.location, include.sections = FALSE){
       fill(main.section, sub.section, .direction = "down") %>%              # Fill down to remove the NA values
       select(main.section, sub.section, reference) %>%
       filter(!is.na(reference)) %>%                                         # Only keep rows with references.
+      unnest(everything()) %>%                                              # Removes items in a list column
+      separate_rows(reference, sep = "; ", convert = TRUE) %>%              # Seperate any references by ;
       as.data.frame() %>%
+      filter(str_detect(reference, "^@") == TRUE) %>%                       # Filter out anything without leading @
+      mutate(reference = gsub("@", "", reference)) %>%                      # Remove the @
       return()
   }
+  
 }
