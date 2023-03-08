@@ -9,7 +9,7 @@ get.notion.database.data <- function(notion.key, database_id, page_size = 100){
   #' checks whether there are more than the page_size values in the database. If there are more than
   #' page_size items then a while loop is executed which uses the next_cursor value as the start
   #' point for the next query until this value becomes NULL which is when the last items are recovered.
-  #' There is a limit of 3 requests per send so i've set an iterator where if the loop is a multiple of 4
+  #' There is a limit of 3 requests per send so i've set an iterator where if the loop is a multiple of 3
   #' then a 2 second rest is implemented.
   #' 
   #' @param notion.key - The users notion key
@@ -57,11 +57,6 @@ get.notion.database.data <- function(notion.key, database_id, page_size = 100){
     # Increase iterator, has to be done at start of the loop.
     iteration <- iteration + 1
     
-    # To prevent the query limits from being breached add in a 2 second pause every 3 loops
-    if(iteration %% 4 == 0){
-      Sys.sleep(2)
-    }
-    
     # Update the body for the new starting point
     body <- list(start_cursor = next_cursor, page_size = 100)
     
@@ -86,6 +81,11 @@ get.notion.database.data <- function(notion.key, database_id, page_size = 100){
     has_more <- notion.data$has_more
     
     next_cursor <- notion.data$next_cursor
+    
+    # To prevent the query limits from being breached add in a 2 second pause every 3 loops
+    if(iteration %% 3 == 0){
+      Sys.sleep(2)
+    }
     
   }
   
