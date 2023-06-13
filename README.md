@@ -18,3 +18,6 @@ You will need to set up an integration within Notion and share the database with
 
 # missingData
 This function returns a dataframe containing the columns with missing data in a dataset as well as the percentage of values missing in the dataset for each column. This is arranged in order of most values missing.
+
+# one_hot_encoding
+This function takes a dataframe and a vector of column names and completes one-hot encoding on the columns to prepare for ML techniques. It then combines the initial dataframe minus any columns selected with the new encoded variables. It requires the caret package to run.
