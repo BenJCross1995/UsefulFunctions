@@ -1,5 +1,10 @@
 # Useful Functions
-A repository for any functions I create that I will reuse.
+A repository for any functions I create that I will reuse. To call any of the functions simply take the raw url and use the function `source_url` from the `devtools` package as shown below.
+```{r}
+library(devtools)
+
+source_url("https://raw.github.com/BenJCross1995/UsefulFunctions/main/missingData.R")
+```
 
 # report_details
 This is a function which calculates the current wordcount of the current markdown file as well as saving a copy of the markdown file and additional comments on the version if required. The final two points are entered by the user when knitting in the knit with parameters option. If the usual knit button is clicked then the option to save the document will not be available. This is useful for version control of a document in a local setting.
