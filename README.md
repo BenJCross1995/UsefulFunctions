@@ -15,3 +15,6 @@ This function retrieves data from a Notion database given the Notion Key and a D
 
 ## Pre-requisites
 You will need to set up an integration within Notion and share the database with that integration. This can be done by following the instructions here: https://developers.notion.com/docs/create-a-notion-integration.
+
+# missingData
+This function returns a dataframe containing the columns with missing data in a dataset as well as the percentage of values missing in the dataset for each column. This is arranged in order of most values missing.
